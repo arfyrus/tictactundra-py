@@ -1,9 +1,10 @@
 import re
 
 grid = [' '] * 9
-pieces = {'X': 4, 'O': 4}
+pieces = {'X': 0, 'O': 0}
 colours = {'X': '\x1b[1;35m', 'O': '\x1b[1;33m'}
 curr = 'X'
+GOAL_NUM = 4
 
 def label_grid():
     num = 1
@@ -17,7 +18,7 @@ def index(x, y):
 
 def winner():
     for player, piece in pieces.items():
-        if piece <= 0:
+        if piece >= GOAL_NUM:
             return player
 
     return ''
@@ -44,7 +45,7 @@ def print_grid(winner = ' '):
     print("+-----------+")
     if winner == ' ':
         print(
-            f"| {colours['X'] if curr == 'X' else ''}X:{'!' if winner == 'X' else pieces['X']}\x1b[0m | {colours['O'] if curr == 'O' else ''}O:{'!' if winner == 'O' else pieces['O']}\x1b[0m |"
+            f"| {colours['X'] if curr == 'X' else ''}X:{'!' if winner == 'X' else (GOAL_NUM-pieces['X'])}\x1b[0m | {colours['O'] if curr == 'O' else ''}O:{'!' if winner == 'O' else (GOAL_NUM-pieces['O'])}\x1b[0m |"
         )
     else:
         print(f"|  {colours[winner]}{winner} wins!\x1b[0m  |")
@@ -68,7 +69,7 @@ if __name__ == '__main__':
 
         print_grid()
 
-        choice = input("> ")
+        choice = input(f"[1~{9-pieces['X']-pieces['O']}]: ")
         if choice == 'q':
             break
         move = valid_move(choice)
@@ -77,28 +78,28 @@ if __name__ == '__main__':
             continue
 
         grid[move] = curr
-        pieces[curr] -= 1
+        pieces[curr] += 1
 
         # Tundra
         ## Check horizontal rows
         for row in range(3):
             if grid[row*3] == grid[row*3 + 1] == grid[row*3 + 2] != ' ':
-                pieces[curr] += 3
+                pieces[curr] -= 3
                 grid[row*3] = grid[row*3 + 1] = grid[row*3 + 2] = ' '
 
         ## Check vertical columns 
         for col in range(3):
             if grid[col] == grid[col + 3] == grid[col + 6] != ' ':
-                pieces[curr] += 3
+                pieces[curr] -= 3
                 grid[col] = grid[col + 3] = grid[col + 6] = ' '
 
         ## Check diagonals
         if grid[0] == grid[4] == grid[8] != ' ':
-            pieces[curr] += 3
+            pieces[curr] -= 3
             grid[0] = grid[4] = grid[8] = ' '
 
         if grid[2] == grid[4] == grid[6] != ' ':
-            pieces[curr] += 3
+            pieces[curr] -= 3
             grid[2] = grid[4] = grid[6] = ' '
 
         if winner():
