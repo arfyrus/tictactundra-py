@@ -66,7 +66,6 @@ if __name__ == '__main__':
     while True:
         label_grid()
 
-        # Print the grid
         print_grid()
 
         choice = input("> ")
@@ -105,10 +104,8 @@ if __name__ == '__main__':
         if winner():
             break
 
-        # Switch player
         curr = 'O' if curr == 'X' else 'X'
 
-    # Remove the labels:
     for i in range(9):
         if not grid[i] == 'X' and not grid[i] == 'O':
             grid[i] = ' '
