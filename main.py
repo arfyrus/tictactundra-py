@@ -28,7 +28,7 @@ def valid_move(cell):
 
     return -1
 
-def print_grid():
+def print_grid(winner = ' '):
     print(f"""
         +-----------+
         | {grid[0]} | {grid[1]} | {grid[2]} |
@@ -37,15 +37,11 @@ def print_grid():
         +-----------+
         | {grid[6]} | {grid[7]} | {grid[8]} |
         +-----------+
-        | X:{players['X']}   O:{players['O']} |
+        | X:{'!' if winner == 'X' else players['X']}   O:{'!' if winner == 'O' else players['O']} |
         +-----------+
     """)
 
 while True:
-    if winner():
-        print(f"{winner()} won!")
-        break
-    
     label_grid()
 
     # Print the grid
@@ -56,7 +52,7 @@ while True:
     if move < 0:
         print("Invalid move")
         continue
-    
+
     grid[move] = curr
     players[curr] -= 1
 
@@ -66,21 +62,25 @@ while True:
         if grid[row*3] == grid[row*3 + 1] == grid[row*3 + 2] != ' ':
             players[curr] += 3
             grid[row*3] = grid[row*3 + 1] = grid[row*3 + 2] = ' '
-            
+
     ## Check vertical columns 
     for col in range(3):
         if grid[col] == grid[col + 3] == grid[col + 6] != ' ':
             players[curr] += 3
             grid[col] = grid[col + 3] = grid[col + 6] = ' '
-            
+
     ## Check diagonals
     if grid[0] == grid[4] == grid[8] != ' ':
         players[curr] += 3
         grid[0] = grid[4] = grid[8] = ' '
-        
+
     if grid[2] == grid[4] == grid[6] != ' ':
         players[curr] += 3
         grid[2] = grid[4] = grid[6] = ' '
+
+    if winner():
+        print(f"{winner()} won!")
+        break
 
     # Switch player
     curr = 'O' if curr == 'X' else 'X'
@@ -90,4 +90,4 @@ for i in range(9):
     if not grid[i] == 'X' and not grid[i] == 'O':
         grid[i] = ' '
 
-print_grid()
+print_grid(curr)
