@@ -1,7 +1,8 @@
 import re
 
 grid = [' '] * 9
-players = {'X': 4, 'O': 4}
+pieces = {'X': 4, 'O': 4}
+colours = {'X': '\x1b[1;35m', 'O': '\x1b[1;33m'}
 curr = 'X'
 
 def label_grid():
@@ -15,8 +16,8 @@ def index(x, y):
     return x + y * 3
 
 def winner():
-    for player, pieces in players.items():
-        if pieces <= 0:
+    for player, piece in pieces.items():
+        if piece <= 0:
             return player
 
     return ''
@@ -33,15 +34,20 @@ def print_grid(winner = ' '):
         print("+-----------+")
         for i in range(3):
             if grid[index(i, j)] == 'X':
-                print(f"| \x1b[1;35mX\x1b[0m ", end='')
+                print(f"| {colours['X']}X\x1b[0m ", end='')
             elif grid[index(i, j)] == 'O':
-                print(f"| \x1b[1;33mO\x1b[0m ", end='')
+                print(f"| {colours['O']}O\x1b[0m ", end='')
             else:
                 print(f"| \x1b[2m{grid[index(i, j)]}\x1b[0m ", end='')
             if i == 2:
                 print("|")
     print("+-----------+")
-    print(f"| {'\x1b[1;35mX\x1b[0m' if curr == 'X' else 'X'}:{'!' if winner == 'X' else players['X']} | {'\x1b[1;33mO\x1b[0m' if curr == 'O' else 'O'}:{'!' if winner == 'O' else players['O']} |")
+    if winner == ' ':
+        print(
+            f"| {colours['X'] if curr == 'X' else ''}X:{'!' if winner == 'X' else pieces['X']}\x1b[0m | {colours['O'] if curr == 'O' else ''}O:{'!' if winner == 'O' else pieces['O']}\x1b[0m |"
+        )
+    else:
+        print(f"|  {colours[winner]}{winner} wins!\x1b[0m  |")
     print("+-----------+")
 
 #    print(f"""
@@ -63,39 +69,40 @@ if __name__ == '__main__':
         # Print the grid
         print_grid()
 
-        choice = input(f"{curr}'s move: ")
+        choice = input("> ")
+        if choice == 'q':
+            break
         move = valid_move(choice)
         if move < 0:
             print("Invalid move")
             continue
 
         grid[move] = curr
-        players[curr] -= 1
+        pieces[curr] -= 1
 
         # Tundra
         ## Check horizontal rows
         for row in range(3):
             if grid[row*3] == grid[row*3 + 1] == grid[row*3 + 2] != ' ':
-                players[curr] += 3
+                pieces[curr] += 3
                 grid[row*3] = grid[row*3 + 1] = grid[row*3 + 2] = ' '
 
         ## Check vertical columns 
         for col in range(3):
             if grid[col] == grid[col + 3] == grid[col + 6] != ' ':
-                players[curr] += 3
+                pieces[curr] += 3
                 grid[col] = grid[col + 3] = grid[col + 6] = ' '
 
         ## Check diagonals
         if grid[0] == grid[4] == grid[8] != ' ':
-            players[curr] += 3
+            pieces[curr] += 3
             grid[0] = grid[4] = grid[8] = ' '
 
         if grid[2] == grid[4] == grid[6] != ' ':
-            players[curr] += 3
+            pieces[curr] += 3
             grid[2] = grid[4] = grid[6] = ' '
 
         if winner():
-            print(f"{winner()} won!")
             break
 
         # Switch player
