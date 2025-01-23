@@ -56,53 +56,54 @@ def print_grid(winner = ' '):
 #        +-----------+
 #    """)
 
-while True:
-    label_grid()
+if __name__ == '__main__':
+    while True:
+        label_grid()
 
-    # Print the grid
-    print_grid()
+        # Print the grid
+        print_grid()
 
-    choice = input(f"{curr}'s move: ")
-    move = valid_move(choice)
-    if move < 0:
-        print("Invalid move")
-        continue
+        choice = input(f"{curr}'s move: ")
+        move = valid_move(choice)
+        if move < 0:
+            print("Invalid move")
+            continue
 
-    grid[move] = curr
-    players[curr] -= 1
+        grid[move] = curr
+        players[curr] -= 1
 
-    # Tundra
-    ## Check horizontal rows
-    for row in range(3):
-        if grid[row*3] == grid[row*3 + 1] == grid[row*3 + 2] != ' ':
+        # Tundra
+        ## Check horizontal rows
+        for row in range(3):
+            if grid[row*3] == grid[row*3 + 1] == grid[row*3 + 2] != ' ':
+                players[curr] += 3
+                grid[row*3] = grid[row*3 + 1] = grid[row*3 + 2] = ' '
+
+        ## Check vertical columns 
+        for col in range(3):
+            if grid[col] == grid[col + 3] == grid[col + 6] != ' ':
+                players[curr] += 3
+                grid[col] = grid[col + 3] = grid[col + 6] = ' '
+
+        ## Check diagonals
+        if grid[0] == grid[4] == grid[8] != ' ':
             players[curr] += 3
-            grid[row*3] = grid[row*3 + 1] = grid[row*3 + 2] = ' '
+            grid[0] = grid[4] = grid[8] = ' '
 
-    ## Check vertical columns 
-    for col in range(3):
-        if grid[col] == grid[col + 3] == grid[col + 6] != ' ':
+        if grid[2] == grid[4] == grid[6] != ' ':
             players[curr] += 3
-            grid[col] = grid[col + 3] = grid[col + 6] = ' '
+            grid[2] = grid[4] = grid[6] = ' '
 
-    ## Check diagonals
-    if grid[0] == grid[4] == grid[8] != ' ':
-        players[curr] += 3
-        grid[0] = grid[4] = grid[8] = ' '
+        if winner():
+            print(f"{winner()} won!")
+            break
 
-    if grid[2] == grid[4] == grid[6] != ' ':
-        players[curr] += 3
-        grid[2] = grid[4] = grid[6] = ' '
+        # Switch player
+        curr = 'O' if curr == 'X' else 'X'
 
-    if winner():
-        print(f"{winner()} won!")
-        break
+    # Remove the labels:
+    for i in range(9):
+        if not grid[i] == 'X' and not grid[i] == 'O':
+            grid[i] = ' '
 
-    # Switch player
-    curr = 'O' if curr == 'X' else 'X'
-
-# Remove the labels:
-for i in range(9):
-    if not grid[i] == 'X' and not grid[i] == 'O':
-        grid[i] = ' '
-
-print_grid(curr)
+    print_grid(curr)
