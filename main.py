@@ -29,17 +29,32 @@ def valid_move(cell):
     return -1
 
 def print_grid(winner = ' '):
-    print(f"""
-        +-----------+
-        | {grid[0]} | {grid[1]} | {grid[2]} |
-        +-----------+
-        | {grid[3]} | {grid[4]} | {grid[5]} |
-        +-----------+
-        | {grid[6]} | {grid[7]} | {grid[8]} |
-        +-----------+
-        | X:{'!' if winner == 'X' else players['X']}   O:{'!' if winner == 'O' else players['O']} |
-        +-----------+
-    """)
+    for j in range(3):
+        print("+-----------+")
+        for i in range(3):
+            if grid[index(i, j)] == 'X':
+                print(f"| \x1b[1;35mX\x1b[0m ", end='')
+            elif grid[index(i, j)] == 'O':
+                print(f"| \x1b[1;33mO\x1b[0m ", end='')
+            else:
+                print(f"| \x1b[2m{grid[index(i, j)]}\x1b[0m ", end='')
+            if i == 2:
+                print("|")
+    print("+-----------+")
+    print(f"| {'\x1b[1;35mX\x1b[0m' if curr == 'X' else 'X'}:{'!' if winner == 'X' else players['X']} | {'\x1b[1;33mO\x1b[0m' if curr == 'O' else 'O'}:{'!' if winner == 'O' else players['O']} |")
+    print("+-----------+")
+
+#    print(f"""
+#        +-----------+
+#        | {grid[0]} | {grid[1]} | {grid[2]} |
+#        +-----------+
+#        | {grid[3]} | {grid[4]} | {grid[5]} |
+#        +-----------+
+#        | {grid[6]} | {grid[7]} | {grid[8]} |
+#        +-----------+
+#        | X:{'!' if winner == 'X' else players['X']}   O:{'!' if winner == 'O' else players['O']} |
+#        +-----------+
+#    """)
 
 while True:
     label_grid()
