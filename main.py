@@ -1,5 +1,3 @@
-import re
-
 grid = [' '] * 9
 pieces = {'X': 0, 'O': 0}
 colours = {'X': '\x1b[1;35m', 'O': '\x1b[1;33m'}
@@ -47,6 +45,8 @@ def print_grid(winner = ' '):
         print(
             f"| {colours['X'] if curr == 'X' else ''}X:{'!' if winner == 'X' else (GOAL_NUM-pieces['X'])}\x1b[0m | {colours['O'] if curr == 'O' else ''}O:{'!' if winner == 'O' else (GOAL_NUM-pieces['O'])}\x1b[0m |"
         )
+    elif winner == 'q':
+        print("| \x1b[1;31mGame quit\x1b[0m |")
     else:
         print(f"|  {colours[winner]}{winner} wins!\x1b[0m  |")
     print("+-----------+")
@@ -71,6 +71,10 @@ if __name__ == '__main__':
 
         choice = input(f"[1~{9-pieces['X']-pieces['O']}]: ")
         if choice == 'q':
+            for i in range(9):
+                if not grid[i] == 'X' and not grid[i] == 'O':
+                    grid[i] = ' '
+            print_grid('q')
             break
         move = valid_move(choice)
         if move < 0:
@@ -103,12 +107,12 @@ if __name__ == '__main__':
             grid[2] = grid[4] = grid[6] = ' '
 
         if winner():
+            for i in range(9):
+                if not grid[i] == 'X' and not grid[i] == 'O':
+                    grid[i] = ' '
+
+            print_grid(curr)
             break
 
         curr = 'O' if curr == 'X' else 'X'
 
-    for i in range(9):
-        if not grid[i] == 'X' and not grid[i] == 'O':
-            grid[i] = ' '
-
-    print_grid(curr)
